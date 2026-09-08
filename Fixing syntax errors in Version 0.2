@@ -8,10 +8,14 @@ Write-Host "======================================="
 Write-Host ""
 
 $ComputerName = $env:COMPUTERNAME
-$ComputerName = $env:USERNAME
+$CurrentUser = $env:USERNAME
+$OS = Get-CimInstance Win32_OperatingSystem
 
 Write-Host "Computer Name: $ComputerName"
 Write-Host "Computer User: $CurrentUser"
+Write-Host "Operating System: $($OS.Caption)"
+Write-Host "OS Version: $($OS.Version)"
+Write-Host "Build Number: $($OS.BuildNumber)"
 
 Write-Host ""
 Write-Host "Health check started..."
