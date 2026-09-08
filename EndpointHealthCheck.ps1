@@ -1,9 +1,9 @@
 #Windows Endpoint Health Check
 #Version 0.2
-Personal PowerShell / Endpoint Administration Lab
+#Personal PowerShell / Endpoint Administration Lab
 
 Write-Host "======================================="
-Write-Host"      Windows EndPoint Health Check
+Write-Host       Windows EndPoint Health Check
 Write-Host "======================================="
 Write-Host ""
 
