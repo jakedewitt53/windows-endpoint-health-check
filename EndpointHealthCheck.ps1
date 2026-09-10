@@ -13,9 +13,9 @@ $OS = Get-CimInstance Win32_OperatingSystem
 $ComputerSystem = Get-CimInstance Win32_ComputerSystem
 $Processor = Get-CimInstance Win32_Processor
 $Disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"
+$DiskFreePercent = [math]::Round(($Disk.FreeSpace / $Disk.Size) * 100, 2)
 $Uptime = (Get-Date) - $OS.LastBootUpTime
 
-Write-Host "---------------------------------------"
 Write-Host            System Information
 Write-Host "---------------------------------------"
 Write-Host "Computer Name: $ComputerName"
@@ -27,10 +27,7 @@ Write-Host "Manufacturer: $($ComputerSystem.Manufacturer)"
 Write-Host "Model: $($ComputerSystem.Model)"
 Write-Host "Processor: $($Processor.Name)"
 Write-Host "Installed RAM: $([math]::Round($ComputerSystem.TotalPhysicalMemory / 1GB, 2)) GB"
-Write-Host "C: Drive Size: $([math]::Round($Disk.Size / 1GB, 2)) GB"
-Write-Host "C: Drive Free: $([math]::Round($Disk.FreeSpace / 1GB, 2)) GB"
 Write-Host ""
-Write-Host "---------------------------------------"
 Write-Host                 Run Time
 Write-Host "---------------------------------------"
 Write-Host "Last Boot: $($OS.LastBootUpTime)"
@@ -40,6 +37,19 @@ if ($Uptime.Days -ge 14) {
 }
 else {
     Write-Host "Status: OK - Recent reboot detected."
+}
+
+Write-Host ""
+Write-Host                Disk Space
+Write-Host "---------------------------------------"
+Write-Host "C: Drive Size: $([math]::Round($Disk.Size / 1GB, 2)) GB"
+Write-Host "C: Drive Free: $([math]::Round($Disk.FreeSpace / 1GB, 2)) GB"
+Write-Host "C: Drive Free Percentage: $DiskFreePercent%"
+if ($DiskFreePercent -lt 15) {
+    Write-Host "Disk Status: WARNING - Low disk space."
+}
+else {
+    Write-Host "Disk Status: OK - Sufficient free space."
 }
 
 Write-Host ""
