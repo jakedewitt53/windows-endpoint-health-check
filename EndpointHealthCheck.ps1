@@ -15,6 +15,8 @@ $Processor = Get-CimInstance Win32_Processor
 $Disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"
 $DiskFreePercent = [math]::Round(($Disk.FreeSpace / $Disk.Size) * 100, 2)
 $Uptime = (Get-Date) - $OS.LastBootUpTime
+$WindowsUpdateService = Get-Service -Name wuauserv
+$WindowsUpdateService = Get-CimInstance Win32_Service -Filter "Name='wuauserv'"
 
 Write-Host            System Information
 Write-Host "---------------------------------------"
@@ -50,6 +52,21 @@ if ($DiskFreePercent -lt 15) {
 }
 else {
     Write-Host "Disk Status: OK - Sufficient free space."
+}
+Write-Host ""
+Write-Host              Windows Update
+Write-Host "---------------------------------------"
+Write-Host "Windows Update Service State: $($WindowsUpdateService.State)"
+Write-Host "Windows Update Start Mode: $($WindowsUpdateService.StartMode)"
+
+if ($WindowsUpdateService.StartMode -eq "Disabled") {
+    Write-Host "Update Status: WARNING - Windows Update service is disabled."
+}
+elseif ($WindowsUpdateService.State -eq "Running") {
+    Write-Host "Update Status: OK - Windows Update service is running."
+}
+else {
+    Write-Host "Update Status: OK - Windows Update service is available but currently idle."
 }
 
 Write-Host ""
