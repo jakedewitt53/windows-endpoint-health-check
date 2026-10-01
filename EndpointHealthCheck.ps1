@@ -17,6 +17,7 @@ $DiskFreePercent = [math]::Round(($Disk.FreeSpace / $Disk.Size) * 100, 2)
 $Uptime = (Get-Date) - $OS.LastBootUpTime
 $WindowsUpdateService = Get-Service -Name wuauserv
 $WindowsUpdateService = Get-CimInstance Win32_Service -Filter "Name='wuauserv'"
+$Defender = Get-MpComputerStatus
 
 Write-Host "          System Information           "
 Write-Host "---------------------------------------"
@@ -81,6 +82,21 @@ If ($BitLocker.ProtectionStatus -eq "On") {
 }
 else {
     Write-Host "BitLocker Status: WARNING - Protection is not enabled."
+}
+
+Write-Host ""
+Write-Host "          Microsoft Defender            "
+Write-Host "----------------------------------------"
+
+Write-Host "Antivirus Enabled: $($Defender.AntivirusEnabled)"
+Write-Host "Real-Time Protection $($Defender.RealTimeProtectionEnabled)"
+Write-Host "Antispyware Enabled: $($Defender.AntispywareEnabled)"
+
+If($Defender.AntivirusEnabled -and $Defender.RealTimeProtectionEnabled) {
+    Write-Host "Defender Status: OK - Antivirus and real-time protection are enabled."
+}
+else {
+    Write-Host "Defender Status: WARNING - Defender protection is not fully enabled."
 }
 
 Write-Host ""
