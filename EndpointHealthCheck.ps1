@@ -3,7 +3,7 @@
 #Personal PowerShell / Endpoint Administration Lab
 
 Write-Host "======================================="
-Write-Host       Windows EndPoint Health Check
+Write-Host "     Windows EndPoint Health Check     "
 Write-Host "======================================="
 Write-Host ""
 
@@ -18,7 +18,7 @@ $Uptime = (Get-Date) - $OS.LastBootUpTime
 $WindowsUpdateService = Get-Service -Name wuauserv
 $WindowsUpdateService = Get-CimInstance Win32_Service -Filter "Name='wuauserv'"
 
-Write-Host            System Information
+Write-Host "          System Information           "
 Write-Host "---------------------------------------"
 Write-Host "Computer Name: $ComputerName"
 Write-Host "Computer User: $CurrentUser"
@@ -30,7 +30,7 @@ Write-Host "Model: $($ComputerSystem.Model)"
 Write-Host "Processor: $($Processor.Name)"
 Write-Host "Installed RAM: $([math]::Round($ComputerSystem.TotalPhysicalMemory / 1GB, 2)) GB"
 Write-Host ""
-Write-Host                 Run Time
+Write-Host "               Run Time                "
 Write-Host "---------------------------------------"
 Write-Host "Last Boot: $($OS.LastBootUpTime)"
 Write-Host "Uptime: $($Uptime.Days) days, $($Uptime.Hours) hours, $($Uptime.Minutes) minutes"
@@ -42,7 +42,7 @@ else {
 }
 
 Write-Host ""
-Write-Host                Disk Space
+Write-Host "              Disk Space               "
 Write-Host "---------------------------------------"
 Write-Host "C: Drive Size: $([math]::Round($Disk.Size / 1GB, 2)) GB"
 Write-Host "C: Drive Free: $([math]::Round($Disk.FreeSpace / 1GB, 2)) GB"
@@ -54,7 +54,7 @@ else {
     Write-Host "Disk Status: OK - Sufficient free space."
 }
 Write-Host ""
-Write-Host              Windows Update
+Write-Host "            Windows Update             "
 Write-Host "---------------------------------------"
 Write-Host "Windows Update Service State: $($WindowsUpdateService.State)"
 Write-Host "Windows Update Start Mode: $($WindowsUpdateService.StartMode)"
@@ -67,6 +67,20 @@ elseif ($WindowsUpdateService.State -eq "Running") {
 }
 else {
     Write-Host "Update Status: OK - Windows Update service is available but currently idle."
+}
+
+Write-Host ""
+Write-Host "              BitLocker                "
+Write-Host "---------------------------------------"
+
+Write-Host "Protection Status: $($BitLocker.ProtectionStatus)"
+Write-Host "Volume Status: $($BitLocker.VolumeStatus)"
+
+If ($BitLocker.ProtectionStatus -eq "On") {
+    Write-Host "BitLocker Status: OK - Protection is enabled."
+}
+else {
+    Write-Host "BitLocker Status: WARNING - Protection is not enabled."
 }
 
 Write-Host ""
